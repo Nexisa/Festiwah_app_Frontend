@@ -20,7 +20,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.nexisa.festiwah"
+      "package": "com.nexsisa.Festiwah"
     },
     "web": {
       "bundler": "metro",

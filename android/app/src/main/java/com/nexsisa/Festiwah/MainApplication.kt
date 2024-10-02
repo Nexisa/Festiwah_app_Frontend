@@ -1,4 +1,4 @@
-package com.nexisa.festiwah
+package com.nexsisa.Festiwah
 
 import android.app.Application
 import android.content.res.Configuration

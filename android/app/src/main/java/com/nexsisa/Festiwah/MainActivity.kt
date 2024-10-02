@@ -1,4 +1,4 @@
-package com.nexisa.festiwah
+package com.nexsisa.Festiwah
 
 import android.os.Build
 import android.os.Bundle
