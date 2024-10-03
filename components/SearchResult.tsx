@@ -1,13 +1,15 @@
 import React from 'react';
-import { Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
+import { Image, TouchableOpacity, ImageSourcePropType, ActivityIndicator } from 'react-native';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface SearchResultProps {
   image: ImageSourcePropType;
   username: string;
   onFollow: () => void;
   isFollowing: boolean;
+  loading?: boolean; 
 }
 
 export const SearchResult: React.FC<SearchResultProps> = ({
@@ -15,22 +17,46 @@ export const SearchResult: React.FC<SearchResultProps> = ({
   username,
   onFollow,
   isFollowing,
+  loading = false, 
 }) => {
-  const buttonClass = isFollowing ? 'bg-gray-300' : 'bg-blue-500';
+  const buttonBackgroundColor = useThemeColor(
+    { light: '#0a7ea4', dark: '#333' }, 
+    isFollowing ? 'text' : 'tint' 
+  );
+  const buttonTextColor = useThemeColor({ light: '#fff', dark: '#fff' }, 'text');
+
   const buttonText = isFollowing ? 'Following' : 'Follow';
 
   return (
-    <ThemedView className="flex-row items-center p-4 border-b border-gray-200">
+    <ThemedView
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0',
+      }}
+    >
       <Image
         source={image}
-        className="w-10 h-10 rounded-full mr-4"
+        style={{ width: 40, height: 40, borderRadius: 20, marginRight: 16 }}
       />
-      <ThemedText className="flex-1 font-bold">{username}</ThemedText>
+      <ThemedText style={{ flex: 1, fontWeight: 'bold' }}>{username}</ThemedText>
       <TouchableOpacity
-        className={`${buttonClass} py-1 px-3 rounded-md`}
+        style={{
+          backgroundColor: buttonBackgroundColor,
+          paddingVertical: 8,
+          paddingHorizontal: 12,
+          borderRadius: 8,
+        }}
         onPress={onFollow}
+        disabled={loading} 
       >
-        <ThemedText className="text-white">{buttonText}</ThemedText>
+        {loading ? (
+          <ActivityIndicator color={buttonTextColor} size="small" /> 
+        ) : (
+          <ThemedText style={{ color: buttonTextColor }}>{buttonText}</ThemedText>
+        )}
       </TouchableOpacity>
     </ThemedView>
   );
