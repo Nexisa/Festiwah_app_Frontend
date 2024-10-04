@@ -1,32 +1,79 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { ThemedText } from './ThemedText';
+import { ThemedView } from './ThemedView'; // Import ThemedView for consistent styling
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 interface CustomBlueButtonProps {
   title: string;
   onPress: () => void;
   size?: 'small' | 'medium' | 'large';
+  loading?: boolean; // Add loading prop
 }
 
 export const CustomBlueButton: React.FC<CustomBlueButtonProps> = ({
   title,
   onPress,
   size = 'medium',
+  loading = false, 
 }) => {
-  const sizeClasses = {
-    small: 'py-1 px-2 text-sm',
-    medium: 'py-2 px-4 text-base',
-    large: 'py-3 px-6 text-lg',
+  const backgroundColor = useThemeColor({ light: '#0a7ea4', dark: '#fff' }, 'tint'); // Themed background color
+  const textColor = useThemeColor({ light: '#fff', dark: '#0a7ea4' }, 'text'); // Themed text color
+
+
+  const sizeStyles = {
+    small: styles.small,
+    medium: styles.medium,
+    large: styles.large,
   };
 
   return (
     <TouchableOpacity
-      className={`bg-blue-500 rounded-md ${sizeClasses[size]}`}
       onPress={onPress}
+      disabled={loading} 
     >
-      <ThemedText className="text-white font-bold text-center">
-        {title}
-      </ThemedText>
+      <ThemedView
+        style={[
+          styles.button,
+          { backgroundColor },
+          sizeStyles[size],
+        ]}
+      >
+        {loading ? (
+          <ActivityIndicator color={textColor} size="small" />
+        ) : (
+          <ThemedText
+            style={{ color: textColor, textAlign: 'center', fontWeight: 'bold' }}
+          >
+            {title}
+          </ThemedText>
+        )}
+      </ThemedView>
     </TouchableOpacity>
   );
 };
+
+// Define styles with StyleSheet
+const styles = StyleSheet.create({
+  button: {
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  small: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    fontSize: 12,
+  },
+  medium: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    fontSize: 16,
+  },
+  large: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    fontSize: 20,
+  },
+});
