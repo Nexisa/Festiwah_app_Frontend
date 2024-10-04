@@ -28,7 +28,7 @@ const { width, height } = Dimensions.get('window');
 const Slider = () => {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
-
+  
   const handleScroll = (event: any) => {
     const slideIndex = Math.round(event.nativeEvent.contentOffset.x / width);
     setActiveIndex(slideIndex);
