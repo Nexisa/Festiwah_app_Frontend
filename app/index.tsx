@@ -35,7 +35,7 @@ const Slider = () => {
   };
 
   const p = () => {
-    router.push('auth/login' as never)
+    router.push('/user' as never)
   }
 
   return (

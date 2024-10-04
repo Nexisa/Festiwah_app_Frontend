@@ -17,9 +17,9 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
-  const [initialRoute, setInitialRoute] = useState('index');
+  const [initialRoute, setInitialRoute] = useState('user');
   const router = useRouter();
-
+/*
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem('token');
@@ -29,14 +29,14 @@ export default function RootLayout() {
         if (role === 'admin') {
           setInitialRoute('admin/dashboard');
         } else if (role === 'user') {
-          setInitialRoute('user/dashboard');
+          setInitialRoute('user');
         }
       }
     };
 
     checkAuth();
   }, []);
-
+*/
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -55,7 +55,7 @@ export default function RootLayout() {
           <Stack.Screen name="auth/login" options={{ headerShown: false }} />
           <Stack.Screen name="tabs/index" options={{ headerShown: false }} />
           <Stack.Screen name="admin/dashboard" options={{ headerShown: false }} />
-          <Stack.Screen name="user/dashboard" options={{ headerShown: false }} />
+          <Stack.Screen name="user" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
       </ThemeProvider>

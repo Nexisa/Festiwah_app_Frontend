@@ -10,7 +10,7 @@ const LoginScreen: React.FC = () => {
         // Add your login logic here
         if (email === 'a' && password === 'a') {
             Alert.alert('Login Successful');
-            router.push('user/dashboard' as never);
+            router.push('user' as never);
         } else {
             Alert.alert('Login Failed', 'Invalid email or password');
         }
