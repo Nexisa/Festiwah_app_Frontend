@@ -52,7 +52,7 @@ export const PostCard: React.FC<PostCardProps> = ({
       <Image source={image} className="w-full h-64" resizeMode="cover" />
       <View className="absolute top-0 left-0 right-0 flex-row justify-between items-center p-2">
         <View className="flex-row items-center">
-          <Image source={require('./assets/default-avatar.png')} className="w-8 h-8 rounded-full mr-2" />
+          <Image source={require('../../assets/images/profile.png')} className="w-8 h-8 rounded-full mr-2" />
           <ThemedText className="font-bold">{username}</ThemedText>
           <ThemedText className="ml-2 text-gray-300">{timeAgo}</ThemedText>
         </View>

@@ -1,27 +1,20 @@
+import { PostCard } from '@/components/Card/Options';
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-
 const Dashboard: React.FC = () => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.header}>User Dashboard</Text>
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Profile</Text>
-                <Text style={styles.cardContent}>Name: John Doe</Text>
-                <Text style={styles.cardContent}>Email: john.doe@example.com</Text>
-            </View>
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Recent Activities</Text>
-                <Text style={styles.cardContent}>- Logged in</Text>
-                <Text style={styles.cardContent}>- Updated profile</Text>
-                <Text style={styles.cardContent}>- Posted a comment</Text>
-            </View>
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Statistics</Text>
-                <Text style={styles.cardContent}>Posts: 10</Text>
-                <Text style={styles.cardContent}>Comments: 25</Text>
-                <Text style={styles.cardContent}>Likes: 50</Text>
-            </View>
+           <PostCard
+
+            image={require("../../assets/images/profile.png")}
+            username="John Doe"
+            timeAgo="2 hours ago"
+            onSavePost={() => {}}
+            onTurnOnAlerts={() => {}}
+            onHidePost={() => {}}
+            onUnfollow={() => {}}
+            size={{ width: 300, height: 250 }}
+            />
         </ScrollView>
     );
 };
