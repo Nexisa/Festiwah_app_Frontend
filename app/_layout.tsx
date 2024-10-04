@@ -1,15 +1,15 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import '@/i18n';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Provider } from 'react-redux';
 import { store } from '@/utils/Store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -17,7 +17,26 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+  const [initialRoute, setInitialRoute] = useState('user');
+  const router = useRouter();
+/*
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = await AsyncStorage.getItem('token');
+      const role = await AsyncStorage.getItem('role');
 
+      if (token) {
+        if (role === 'admin') {
+          setInitialRoute('admin/dashboard');
+        } else if (role === 'user') {
+          setInitialRoute('user');
+        }
+      }
+    };
+
+    checkAuth();
+  }, []);
+*/
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -30,14 +49,16 @@ export default function RootLayout() {
 
   return (
     <Provider store={store}>
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-        <Stack.Screen name="auth/login" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack initialRouteName={initialRoute}>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="auth/login" options={{ headerShown: false }} />
+          <Stack.Screen name="tabs/index" options={{ headerShown: false }} />
+          <Stack.Screen name="admin/dashboard" options={{ headerShown: false }} />
+          <Stack.Screen name="user" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </ThemeProvider>
     </Provider>
   );
 }

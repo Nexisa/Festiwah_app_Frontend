@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 
 const LoginScreen: React.FC = () => {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const handleLogin = () => {
         // Add your login logic here
-        if (email === 'test@example.com' && password === 'password') {
+        if (email === 'a' && password === 'a') {
             Alert.alert('Login Successful');
+            router.push('user' as never);
         } else {
             Alert.alert('Login Failed', 'Invalid email or password');
         }
@@ -20,14 +22,17 @@ const LoginScreen: React.FC = () => {
             <TextInput
                 style={styles.input}
                 placeholder="Email"
+                placeholderTextColor={'#fff'}
                 value={email}
                 onChangeText={setEmail}
+                
                 keyboardType="email-address"
                 autoCapitalize="none"
             />
             <TextInput
                 style={styles.input}
                 placeholder="Password"
+                placeholderTextColor={'#fff'}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry

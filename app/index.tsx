@@ -28,14 +28,14 @@ const { width, height } = Dimensions.get('window');
 const Slider = () => {
   const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
-
+  
   const handleScroll = (event: any) => {
     const slideIndex = Math.round(event.nativeEvent.contentOffset.x / width);
     setActiveIndex(slideIndex);
   };
 
   const p = () => {
-    router.push('auth/login' as never)
+    router.push('/user' as never)
   }
 
   return (
