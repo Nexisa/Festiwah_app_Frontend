@@ -25,6 +25,7 @@ export const BlueButton: React.FC<BlueButtonProps> = ({ title, onPress, loading 
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
+          margin: 16,
         }}
       >
         {loading ? (
