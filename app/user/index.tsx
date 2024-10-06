@@ -1,52 +1,133 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import StoryScreen from '@/components/Dashboard/Story';
+import React, { useState } from 'react';
+import { View, Text, FlatList, SafeAreaView, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { Ionicons } from '@expo/vector-icons';
+import Story2, { User } from '@/components/Dashboard/Story2';
+import StoryView from '@/components/Dashboard/StoryView';
 import { PostCard } from '@/components/Card/Options';
-interface StoryCircleProps {
-  username: string;
-  isAdd?: boolean;
-}
+const USERS: User[] = [
+  { id: '1', username: 'Your Story', avatar: 'https://picsum.photos/150', hasStory: false },
+  { id: '2', username: 'john_doe', avatar: 'https://picsum.photos/160', hasStory: true, storyContent: 'https://picsum.photos/1080' },
+  { id: '3', username: 'jane_smith', avatar: 'https://picsum.photos/170', hasStory: true, storyContent: 'https://picsum.photos/1070' },
+  { id: '4', username: 'mike_johnson', avatar: 'https://picsum.photos/180', hasStory: true, storyContent: 'https://picsum.photos/1050' },
+  { id: '5', username: 'emily_brown', avatar: 'https://picsum.photos/190', hasStory: true, storyContent: 'https://picsum.photos/1090' },
+];
+/*
+const Home: React.FC = () => {
+  const [viewingStoryIndex, setViewingStoryIndex] = useState<number | null>(null);
 
+  const handleStoryPress = (index: number) => {
+    if (index === 0) {
+      // Handle "Your Story" press (e.g., open camera or story creation screen)
+      console.log("Open story creation");
+    } else if (USERS[index].hasStory) {
+      setViewingStoryIndex(index);
+    }
+  };
 
-const InstaStoryDashboard = () => {
-  const stories = ['Your Story', 'User1', 'User2', 'User3', 'User4'];
+  const renderStory = ({ item, index }: { item: User; index: number }) => (
+    <Story2 user={item} onPress={() => handleStoryPress(index)} />
+  );
 
   return (
-    <View className="flex-1 bg-white">
-      {/* Top Bar */}
-      <View className="flex-row justify-between items-center p-4 border-b border-gray-200">
-        <Text className="text-xl font-bold">Festiwah</Text>
-        <Feather name='search' className="text-black" size={24} />
-      </View>
-
-      {/* Stories Section */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="p-4">
-        
-        {stories.map((story, index) => (
-          <StoryScreen key={index} username={story} userImage={'../../assets/test/back.jpeg'} storyContent={'this is a story'} isLoading={true} />
-        ))}
-        
-      </ScrollView>
-
-      {/* Rest of the feed would go here */}
-      <View className="flex-1 justify-center items-center">
-        <ScrollView>
-          <PostCard
-
-            image={require('../../assets/test/back.jpeg')}
-            username="User1"
-            timeAgo="2 hours ago"
-            onSavePost={() => {}}
-            onTurnOnAlerts={() => {}}
-            onHidePost={() => {}}
-            onUnfollow={() => {}}
-            size={{ width: 300, height: 250 }}
+    <SafeAreaView className="flex-1 bg-black">
+      <StatusBar style="light" />
+      {viewingStoryIndex !== null ? (
+        <StoryView 
+          users={USERS.filter(user => user.hasStory)} 
+          initialIndex={viewingStoryIndex - 1}
+          onComplete={() => setViewingStoryIndex(null)} 
+        />
+      ) : (
+        <>
+          <View className="flex-row justify-between items-center px-4 py-2">
+            <Text className="text-white text-2xl font-bold">Instagram</Text>
+            <TouchableOpacity>
+              <Ionicons name="search" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={USERS}
+            renderItem={renderStory}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className="py-2"
           />
-          </ScrollView> 
-               </View>
-    </View>
+        </>
+      )}
+    </SafeAreaView>
   );
 };
 
-export default InstaStoryDashboard;
+export default Home;
+*/
+const Home: React.FC = () => {
+  const [viewingStoryIndex, setViewingStoryIndex] = useState<number | null>(null);
+
+  const handleStoryPress = (index: number) => {
+    if (index === 0) {
+      // Handle "Your Story" press (e.g., open camera or story creation screen)
+      console.log("Open story creation");
+    } else if (USERS[index].hasStory) {
+      setViewingStoryIndex(index);
+    }
+  };
+
+  const renderStory = ({ item, index }: { item: User; index: number }) => (
+    <Story2 user={item} onPress={() => handleStoryPress(index)} />
+  );
+
+  //screen width height
+  const { width, height } = useWindowDimensions();
+  const renderPost = ({ item, index }: { item: User; index: number }) => (
+    <PostCard 
+      image={{ uri: item.storyContent }} 
+      username={item.username} 
+      timeAgo="1h" 
+      onSavePost={() => console.log('Save post')} 
+      onTurnOnAlerts={() => console.log('Turn on alerts')} 
+      onHidePost={() => console.log('Hide post')} 
+      onUnfollow={() => console.log('Unfollow')} 
+      size={{ width: width*0.95, height: height / 2 }} 
+    />
+  );
+  return (
+    <SafeAreaView className="flex-1 bg-black">
+      <StatusBar style="light" />
+      {viewingStoryIndex !== null ? (
+        <StoryView 
+          users={USERS.filter(user => user.hasStory)} 
+          initialIndex={viewingStoryIndex - 1}
+          onClose={() => setViewingStoryIndex(null)} 
+        />
+      ) : (
+        <>
+          <View className="flex-row justify-between items-center px-4 py-2 pt-7">
+            <Text className="text-white text-2xl font-bold">Festiwah</Text>
+            <TouchableOpacity>
+              <Ionicons name="search" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={USERS}
+            renderItem={renderStory}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            className=""
+          />
+         
+          <FlatList
+            data={USERS}
+            renderItem={renderPost}
+            keyExtractor={(item) => item.id}
+            className=" "  
+          />
+        </>
+      )}
+    </SafeAreaView>
+  );
+};
+
+export default Home;
