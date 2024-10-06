@@ -10,9 +10,11 @@ import {
     Linking,
     ActivityIndicator,
     RefreshControl,
+    Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Entypo, FontAwesome } from '@expo/vector-icons';
+import { Entypo, FontAwesome, Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 
 interface Story {
     title: string;
@@ -37,7 +39,6 @@ interface ProfileProps {
     posts: Post[];
 }
 
-// Updated dummy data
 const dummyData: ProfileProps = {
     name: "Reny Lewis",
     occupation: "Photographer",
@@ -68,7 +69,6 @@ const Profile: React.FC = () => {
         postsCount,
         followers,
         following,
-        profileImage,
         coverImage,
         stories,
         posts,
@@ -81,13 +81,13 @@ const Profile: React.FC = () => {
     const [followerCount, setFollowerCount] = useState(followers);
     const [globalLoading, setGlobalLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
+    const [profileImage, setProfileImage] = useState(dummyData.profileImage);
 
     const handleScroll = (event: any) => {
         const offsetY = event.nativeEvent.contentOffset.y;
-        console.log('Scroll Offset:', offsetY); // Log to check the scroll value
+        console.log('Scroll Offset:', offsetY);
         if (offsetY > 0 && !isLoading) {
             setIsLoading(true);
-            // Simulate loading more content
             setTimeout(() => {
                 setIsLoading(false);
             }, 2000);
@@ -113,20 +113,43 @@ const Profile: React.FC = () => {
         setTimeout(() => {
             setGlobalLoading(false);
             setFullScreenImage(coverImage);
-        }, 500); // Simulate slight loading time
+        }, 500);
     };
 
     const onRefresh = () => {
         setRefreshing(true);
-        // Simulate fetching new data
         setTimeout(() => {
             setRefreshing(false);
         }, 2000);
     };
 
+    const handleProfilePictureChange = async () => {
+        try {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to change your profile picture.');
+                return;
+            }
+
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [1, 1],
+                quality: 1,
+            });
+
+            if (result.assets && !result.canceled) {
+                setProfileImage(result.assets[0].uri);
+                console.log('New profile picture selected:', result.assets[0].uri);
+            }
+        } catch (error) {
+            console.error('Error changing profile picture:', error);
+            Alert.alert('Error', 'An error occurred while trying to change the profile picture.');
+        }
+    };
+
     return (
         <SafeAreaView className="flex-1 bg-white">
-            {/* Global Loading Indicator */}
             {globalLoading && (
                 <View className="absolute inset-0 bg-black opacity-50 z-50 flex justify-center items-center">
                     <ActivityIndicator size="large" color="#fff" />
@@ -138,7 +161,6 @@ const Profile: React.FC = () => {
                 scrollEventThrottle={16}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             >
-                {/* Cover Photo and Profile Picture */}
                 <TouchableOpacity onPress={handleCoverImageClick}>
                     <ImageBackground source={{ uri: coverImage }} className="h-40">
                         <View className="flex-row justify-between p-4">
@@ -146,19 +168,26 @@ const Profile: React.FC = () => {
                                 <Entypo name="menu" size={24} color="white" />
                             </TouchableOpacity>
                         </View>
-                        <TouchableOpacity className="absolute -bottom-16 left-4" onPress={() => setFullScreenImage(profileImage)}>
-                            <Image
-                                source={{ uri: profileImage }}
-                                className="w-32 h-32 rounded-full border-4 border-white"
-                                accessibilityLabel={`${name}'s Profile Image`}
-                                resizeMode="cover" // Ensures the image fills the circle properly
-                            />
-                        </TouchableOpacity>
+                        <View className="absolute -bottom-16 left-4">
+                            <TouchableOpacity onPress={() => setFullScreenImage(profileImage)}>
+                                <Image
+                                    source={{ uri: profileImage }}
+                                    className="w-32 h-32 rounded-full border-4 border-white"
+                                    accessibilityLabel={`${name}'s Profile Image`}
+                                    resizeMode="cover"
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                className="absolute bottom-0 right-0 bg-white rounded-full p-2"
+                                onPress={handleProfilePictureChange}
+                            >
+                                <Ionicons name="camera" size={24} color="black" />
+                            </TouchableOpacity>
+                        </View>
                     </ImageBackground>
                 </TouchableOpacity>
 
                 <View className="mt-20 px-4">
-                    {/* Profile Info */}
                     <Text className="text-xl font-bold">{name}</Text>
                     <Text className="text-sm text-gray-600">{occupation}</Text>
                     <Text className="text-sm text-gray-600">{email}</Text>
@@ -167,7 +196,6 @@ const Profile: React.FC = () => {
                         <Text className="text-sm text-gray-600 ml-1">{location}</Text>
                     </View>
 
-                    {/* Social Icons */}
                     <View className="flex-row mt-2">
                         <TouchableOpacity onPress={() => openSocialMedia('facebook')}>
                             <FontAwesome name="facebook-square" size={24} color="#3b5998" style={{ marginRight: 10 }} />
@@ -177,7 +205,6 @@ const Profile: React.FC = () => {
                         </TouchableOpacity>
                     </View>
 
-                    {/* Stats */}
                     <View className="flex-row justify-between mt-4">
                         <View className="items-center">
                             <Text className="font-bold">{postsCount}</Text>
@@ -193,7 +220,6 @@ const Profile: React.FC = () => {
                         </View>
                     </View>
 
-                    {/* Follow Button */}
                     <TouchableOpacity
                         className={`rounded-full py-2 mt-4 ${isFollowing ? 'bg-gray-300' : 'bg-blue-500'}`}
                         onPress={handleFollow}
@@ -203,7 +229,6 @@ const Profile: React.FC = () => {
                         </Text>
                     </TouchableOpacity>
 
-                    {/* Highlights */}
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
                         {stories.map((story: Story, index: number) => (
                             <View key={index} className="items-center mr-4">
@@ -219,7 +244,6 @@ const Profile: React.FC = () => {
                         </TouchableOpacity>
                     </ScrollView>
 
-                    {/* Posts Grid */}
                     <View className="flex-row flex-wrap mt-4">
                         {posts.length > 0 ? (
                             posts.map((post: Post, index: number) => (
@@ -227,7 +251,7 @@ const Profile: React.FC = () => {
                                     <Image
                                         source={{ uri: post.imageUrl }}
                                         className="w-[118px] h-40 mx-2"
-                                        resizeMode="cover" // Use cover to ensure the image takes up the space properly
+                                        resizeMode="cover"
                                     />
                                 </TouchableOpacity>
                             ))
@@ -236,56 +260,14 @@ const Profile: React.FC = () => {
                         )}
                     </View>
                 </View>
-
-                {isLoading && (
-                    <View className="py-4">
-                        <ActivityIndicator size="large" color="#0000ff" />
-                        <Text className="text-center">Loading more...</Text>
-                    </View>
-                )}
             </ScrollView>
 
-            {/* Full-Screen Image Modal */}
-            <Modal
-                visible={!!fullScreenImage}
-                transparent={true}
-                animationType="fade"
-                onRequestClose={() => setFullScreenImage(null)}
-            >
-                <TouchableOpacity
-                    className="flex-1 justify-center items-center bg-black bg-opacity-80"
-                    onPress={() => setFullScreenImage(null)}
-                >
-                    {fullScreenImage && (
-                        <Image
-                            source={{ uri: fullScreenImage }}
-                            className="h-full w-full"
-                            resizeMode="contain"
-                        />
-                    )}
-                </TouchableOpacity>
-            </Modal>
-
-            {/* Menu Modal */}
-            <Modal visible={isMenuOpen} transparent={true} animationType="slide" onRequestClose={() => setIsMenuOpen(false)}>
-                <View className="flex-1 bg-white">
-                    <SafeAreaView>
-                        <TouchableOpacity className="p-4" onPress={() => setIsMenuOpen(false)}>
-                            <Entypo name="cross" size={24} color="black" />
-                        </TouchableOpacity>
-                        <View className="p-4">
-                            <Text className="text-xl font-bold mb-4">Menu</Text>
-                            <TouchableOpacity className="py-2">
-                                <Text>Edit Profile</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity className="py-2">
-                                <Text>Settings</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity className="py-2">
-                                <Text>Logout</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </SafeAreaView>
+            <Modal visible={!!fullScreenImage} transparent={true}>
+                <View className="flex-1 justify-center items-center bg-black bg-opacity-75">
+                    <TouchableOpacity onPress={() => setFullScreenImage(null)} className="absolute top-10 right-10">
+                        <Ionicons name="close" size={30} color="white" />
+                    </TouchableOpacity>
+                    <Image source={{ uri: fullScreenImage || '' }} className="w-96 h-96" resizeMode="contain" />
                 </View>
             </Modal>
         </SafeAreaView>
