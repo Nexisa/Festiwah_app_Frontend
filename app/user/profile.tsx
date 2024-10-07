@@ -15,6 +15,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Entypo, FontAwesome, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
 
 interface Story {
     title: string;
@@ -82,7 +83,7 @@ const Profile: React.FC = () => {
     const [globalLoading, setGlobalLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [profileImage, setProfileImage] = useState(dummyData.profileImage);
-
+     const router = useRouter();
     const handleScroll = (event: any) => {
         const offsetY = event.nativeEvent.contentOffset.y;
         console.log('Scroll Offset:', offsetY);
@@ -210,14 +211,21 @@ const Profile: React.FC = () => {
                             <Text className="font-bold">{postsCount}</Text>
                             <Text className="text-gray-600">posts</Text>
                         </View>
-                        <View className="items-center">
-                            <Text className="font-bold">{followerCount}</Text>
-                            <Text className="text-gray-600">followers</Text>
-                        </View>
-                        <View className="items-center">
-                            <Text className="font-bold">{following}</Text>
-                            <Text className="text-gray-600">following</Text>
-                        </View>
+                        <TouchableOpacity
+                className="items-center"
+                onPress={() => router.push('/screens/follower')}
+            >
+                <Text className="font-bold">{followerCount}</Text>
+                <Text className="text-gray-600">followers</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+                className="items-center"
+                onPress={() => router.push('/screens/follower')}
+            >
+                <Text className="font-bold">{following}</Text>
+                <Text className="text-gray-600">following</Text>
+            </TouchableOpacity>
                     </View>
 
                     <TouchableOpacity

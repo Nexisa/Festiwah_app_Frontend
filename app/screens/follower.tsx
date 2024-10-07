@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, FlatList, ActivityIndicator, RefreshControl, TouchableOpacity } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
-import UserCard from '../../components/Card/UserInfo';
+import UserCard from '@/components/Card/UserInfo';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
