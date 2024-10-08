@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -11,6 +11,7 @@ import {
     ActivityIndicator,
     RefreshControl,
     Alert,
+    Button,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Entypo, FontAwesome, Ionicons } from '@expo/vector-icons';
@@ -74,8 +75,9 @@ const Profile: React.FC = () => {
         stories,
         posts,
     } = dummyData;
-
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
     const [fullScreenImage, setFullScreenImage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
@@ -168,6 +170,29 @@ const Profile: React.FC = () => {
                             <TouchableOpacity onPress={() => setIsMenuOpen(true)}>
                                 <Entypo name="menu" size={24} color="white" />
                             </TouchableOpacity>
+
+                            <Modal visible={isMenuOpen} transparent={true} animationType="slide">
+                                <View className="flex-1 pt-5 border-black ">
+                                    
+                                    <View className="bg-white p-4 rounded-lg w-3/4">
+                                    <TouchableOpacity onPress={() => setIsMenuOpen(false)} className=" items-end ">
+                                        <Ionicons name="close" size={30} color="black" />
+                                    </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { setIsMenuOpen(false);
+                                             router.push('/Settings') }} className="mb-4">
+                                            <Text className="text-lg">Settings</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { setIsMenuOpen(false);  router.push('/screens2'); }} className="mb-4">
+                                            <Text className="text-lg">Go to Screen 2</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => { setIsMenuOpen(false); router.push('/screen3'); }}>
+                                            <Text className="text-lg">Go to Screen 3</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </Modal>
+                            
+                            
                         </View>
                         <View className="absolute -bottom-16 left-4">
                             <TouchableOpacity onPress={() => setFullScreenImage(profileImage)}>
