@@ -5,18 +5,25 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Feather } from '@expo/vector-icons';
+import { CustomHeader } from '@/components/CustomHeader';
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   return (
     <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
+      // screenOptions={{
+      //   tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+      //   headerShown: false,
+      // }}
 
-      }}>
+      screenOptions={({ route }) => ({
+        header: () => <CustomHeader title={route.name} />,
+      })}
+      >
       <Tabs.Screen
+      
         name="index"
         options={{
+          headerShown: false,
           title: '',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={focused?"#0976E9": color} />
@@ -53,6 +60,8 @@ export default function TabLayout() {
         <Tabs.Screen
             name="profile"
             options={{
+              
+          headerShown: false,
             title: '',
             tabBarIcon: ({ color, focused }) => (
                 <TabBarIcon name={focused ? 'person' : 'person-outline'} color={focused?"#0976E9": color} />

@@ -9,6 +9,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Provider } from 'react-redux';
 import { store } from '@/utils/Store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CustomHeader } from '@/components/CustomHeader';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,7 +20,7 @@ export default function RootLayout() {
   });
   const [initialRoute, setInitialRoute] = useState('user');
   const router = useRouter();
-/*
+
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem('token');
@@ -36,7 +37,7 @@ export default function RootLayout() {
 
     checkAuth();
   }, []);
-*/
+
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
@@ -50,7 +51,12 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack initialRouteName={initialRoute}>
+        <Stack
+          screenOptions={({ route }) => ({
+            header: () => <CustomHeader title={route.name} />,
+          })}
+          initialRouteName={initialRoute}
+        >
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="auth/login" options={{ headerShown: false }} />
           <Stack.Screen name="tabs/index" options={{ headerShown: false }} />
