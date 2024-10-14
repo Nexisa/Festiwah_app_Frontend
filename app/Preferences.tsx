@@ -25,7 +25,7 @@ const Preferences = () => {
          <SamplePressable
         iconName='language'
         text='Language'
-         press={()=>{router.push('/')}}
+         press={()=>{router.push('/Language')}}
         />
     </View>
   )

@@ -166,27 +166,29 @@ const Profile: React.FC = () => {
             >
                 <TouchableOpacity onPress={handleCoverImageClick}>
                     <ImageBackground source={{ uri: coverImage }} className="h-40">
-                        <View className="flex-row justify-between p-4">
+                        <View className="flex-row justify-end p-6">
                             <TouchableOpacity onPress={() => setIsMenuOpen(true)}>
                                 <Entypo name="menu" size={24} color="white" />
                             </TouchableOpacity>
 
                             <Modal visible={isMenuOpen} transparent={true} animationType="slide">
-                                <View className="flex-1 pt-5 border-black ">
+                                <View className="flex-1 pt-12 pr-4 items-end border-black ">
                                     
-                                    <View className="bg-white p-4 rounded-lg w-3/4">
+                                    <View className="bg-white p-2 rounded-lg w-1/2">
                                     <TouchableOpacity onPress={() => setIsMenuOpen(false)} className=" items-end ">
                                         <Ionicons name="close" size={30} color="black" />
                                     </TouchableOpacity>
                                         <TouchableOpacity onPress={() => { setIsMenuOpen(false);
-                                             router.push('/Settings') }} className="mb-4">
-                                            <Text className="text-lg">Settings</Text>
+                                             router.push('/Settings') }} className="mb-3 pl-2">
+                                            <Text className="text-base">Settings</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { setIsMenuOpen(false);  router.push('/screens2'); }} className="mb-4">
-                                            <Text className="text-lg">Go to Screen 2</Text>
+                                        <TouchableOpacity onPress={() => { setIsMenuOpen(false);
+                                              router.push('/Settings') }} className="mb-3 pl-2">
+                                            <Text className="text-base">Go to Screen 2</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => { setIsMenuOpen(false); router.push('/screen3'); }}>
-                                            <Text className="text-lg">Go to Screen 3</Text>
+                                        <TouchableOpacity onPress={() => { setIsMenuOpen(false);
+                                            router.push('/Settings') }} className="mb-3 pl-2">
+                                            <Text className=" text-base">Go to Screen 3</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
@@ -194,11 +196,11 @@ const Profile: React.FC = () => {
                             
                             
                         </View>
-                        <View className="absolute -bottom-16 left-4">
+                        <View className="items-center  border-2">
                             <TouchableOpacity onPress={() => setFullScreenImage(profileImage)}>
                                 <Image
                                     source={{ uri: profileImage }}
-                                    className="w-32 h-32 rounded-full border-4 border-white"
+                                    className="w-32 h-32 rounded-full  border-4 border-white"
                                     accessibilityLabel={`${name}'s Profile Image`}
                                     resizeMode="cover"
                                 />
